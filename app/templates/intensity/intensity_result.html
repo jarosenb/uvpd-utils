@@ -1,0 +1,116 @@
+
+
+{% block content %}
+
+    <div id="result" style="padding-top: 60px"></div>
+
+    <ul class="nav nav-tabs">
+        <li><a data-toggle="tab" href="#home" id="hometoggle">All ions</a></li>
+        <li><a data-toggle="tab" href="#menu1" id="tab1toggle">apo ions</a></li>
+        <li><a data-toggle="tab" href="#menu2" id="tab2toggle">holo ions</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+            {% include "intensity/plot_all.html" %}
+
+        </div>
+        <div id="menu1" class="tab-pane fade">
+            {% include 'intensity/plot_apo.html' %}
+
+
+        </div>
+        <div id="menu2" class="tab-pane fade">
+            {% include 'intensity/plot_holo.html' %}
+
+        </div>
+
+    </div>
+
+    <div id="table-content"></div>
+
+
+    <script>
+
+            $(document).ready(function(){
+                $('#hometoggle').tab('show')
+                location="#result"
+
+            });
+
+            $('#hometoggle').on('show.bs.tab', function(e) {
+                var all_data = {{ result.all_csv().tolist() | tojson }};
+
+
+                var all_container = document.getElementById('table-content');
+
+                all_hot = new Handsontable(all_container, {
+                    data: all_data,
+                    rowHeaders: true,
+                    colHeaders: true,
+                    stretchH: 'all',
+                    height: 600,
+                    manualColumnResize: true
+                });
+            })
+
+            $('#hometoggle').on('hide.bs.tab', function(e){
+                all_hot.destroy()
+            });
+
+            $('#tab1toggle').on('show.bs.tab', function(e) {
+
+                var apo_data = {{ result.apo_csv().tolist() | tojson }};
+
+                var apo_container = document.getElementById('table-content');
+
+                apo_hot = new Handsontable(apo_container, {
+                    data: apo_data,
+                    rowHeaders: true,
+                    colHeaders: true,
+                    stretchH: 'all',
+                    height: 600,
+                    manualColumnResize: true
+                });
+
+                apo_hot.render()
+
+
+            });
+
+            $('#tab1toggle').on('hide.bs.tab', function(e){
+                apo_hot.destroy()
+            })
+
+            $('#tab2toggle').on('show.bs.tab', function(e) {
+                var holo_data = {{ result.holo_csv().tolist() | tojson }};
+
+
+                var holo_container = document.getElementById('table-content');
+                //$('#example').hide();
+                holo_hot = new Handsontable(holo_container, {
+                    data: holo_data,
+                    rowHeaders: true,
+                    colHeaders: true,
+                    stretchH: 'all',
+                    height: 600,
+                    manualColumnResize: true
+                });
+                holo_hot.render()
+            });
+
+             $('#tab2toggle').on('hide.bs.tab', function(e){
+                holo_hot.destroy()
+            })
+
+
+
+
+
+    </script>
+
+
+
+
+
+{% endblock %}

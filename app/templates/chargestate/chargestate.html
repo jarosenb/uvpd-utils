@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+    <form action="" method="post" name="uvpd_intensity" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <!--FORMATTING FOR SEQUENCE AND TIC INTENSITY-->
+        <div class="col-md-12">
+            Sequence (Add covalent mods like in prospector):
+            {{ form.sequence(class="form-control") }}</div>
+        <br>
+
+
+        <!--FORMATTING FOR MODIFICATION SELECTION-->
+
+        <div class="col-md-6">
+
+
+
+            <!--<div id="progress" style="display:inline-block" class="alert alert-success"></div> -->
+
+            <!--FORMATTING FOR ION TYPE SELECTION -->
+            <br><strong>Ion Types:</strong><br>
+
+            <div class="col-md-12" style="padding-bottom: 3px">
+                <a class="btn btn-block btn-info" onclick="toggleAllions()"><strong>Toggle all
+                    ion series</strong></a></th>
+            </div>
+            <div class="col-md-12" style="padding-bottom: 3px">
+                <a class="btn btn-success" onclick="toggleAions()"><strong>Toggle a/x ions</strong></a>&nbsp;
+
+
+                {{ form.a(class="aion", checked="true", data_toggle="toggle", data_on="a", data_off="a", data_onstyle="success", data_offstyle="default") }}
+
+                {{ form.ap1(class="aion", checked="true", data_toggle="toggle", data_on="a+1", data_off="a+1", data_onstyle="success", data_offstyle="default") }}
+
+                {{ form.x(class="aion", checked="true", data_toggle="toggle", data_on="x", data_off="x", data_onstyle="success", data_offstyle="default") }}
+
+                {{ form.xp1(class="aion", checked="true", data_toggle="toggle", data_on="x+1", data_off="x+1", data_onstyle="success", data_offstyle="default") }}
+
+            </div>
+            <div class="col-md-12" style="padding-bottom: 3px">
+                <a class="btn btn-primary" onclick="toggleBions()"><strong>Toggle b/y ions</strong></a>&nbsp;
+
+                {{ form.b(class="bion",  data_toggle="toggle", data_on="b", data_off="b", data_onstyle="primary", data_offstyle="default") }}
+
+                {{ form.y(class="bion",  data_toggle="toggle", data_on="y", data_off="y", data_onstyle="primary", data_offstyle="default") }}
+
+                {{ form.ym1(class="bion",  data_toggle="toggle", data_on="y-1", data_off="y-1", data_onstyle="primary", data_offstyle="default") }}
+
+                {{ form.ym2(class="bion",  data_toggle="toggle", data_on="y-2", data_off="y-2", data_onstyle="primary", data_offstyle="default") }}
+            </div>
+            <div class="col-md-12" style="padding-bottom: 3px">
+                <a class="btn btn-danger" onclick="toggleCions()"><strong>Toggle c/z ions</strong></a>&nbsp;
+
+                {{ form.c(class="cion",  data_toggle="toggle", data_on="c", data_off="c", data_onstyle="danger", data_offstyle="default") }}
+
+               {{ form.z(class="cion",  data_toggle="toggle", data_on="z", data_off="z", data_onstyle="danger", data_offstyle="default") }}
+
+            </div>
+
+            <br>Maximum Charge:
+            {{ form.charge(class="form-control") }}
+
+            <br>PPM error threshold (optional, defaults to 10)
+            {{ form.ppm(class="form-control") }}
+        </div>
+        <div class="col-md-6">
+            <br>Raw data from Prosight Thrash (csv-formatted)
+            <!--<div id="rawdata"></div> -->
+            {{ form.raw(class="form-control",  rows="15") }}
+        </div>
+
+        <div class="col-md-12"><br>
+            <button class="btn btn-primary btn-block" type="submit">Run Charge-state Analysis</button>
+        </div>
+
+
+    </form>
+
+    {% if form.validate_on_submit() %}
+        <div>&nbsp;</div>
+        {% include "chargestate/chargestate_result.html" %}
+
+    {% endif %}
+
+
+    <script async>
+
+        function toggleAions() {
+            $('.aion').bootstrapToggle('toggle')
+        }
+        function toggleBions() {
+            $('.bion').bootstrapToggle('toggle')
+        }
+        function toggleCions() {
+            $('.cion').bootstrapToggle('toggle')
+        }
+        function toggleAllions() {
+            $('.cion').bootstrapToggle('toggle');
+            $('.aion').bootstrapToggle('toggle');
+            $('.bion').bootstrapToggle('toggle')
+        }
+
+    </script>
+
+
+
+
+
+
+
+
+{% endblock %}

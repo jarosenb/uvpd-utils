@@ -1,0 +1,61 @@
+{% block content %}
+
+    <div id="holo_plot" style="width:100%; height:500px;"></div>
+    <script>
+        $(function () {
+            $('#holo_plot').highcharts({
+
+                credits: {
+                    enabled: false
+                },
+
+                title: {
+                    text: 'Fragmentation Intensity Plot',
+                    x: -20 //center
+                },
+
+                xAxis: {
+                    title: {text: "Residue Position"},
+                    categories: {{ result.all_csv().transpose().tolist()[0][1:] | tojson }}
+                },
+                yAxis: {
+                    title: {
+                        text: 'Fragmentation Yield'
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+                tooltip: {
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: [{
+                    name: 'All ions',
+                    data: {{ result.holo_csv().transpose()[1][1:].astype('float').tolist() }}
+                },
+
+                {
+                    name: 'N-terminal',
+                    data: {{ result.holo_csv().transpose()[2][1:].astype('float').tolist() }},
+                    visible: false
+                },
+
+                {
+                    name: 'C-terminal',
+                    data: {{ result.holo_csv().transpose()[3][1:].astype('float').tolist() }},
+                    visible: false
+                }]
+
+            });
+        });
+
+    </script>
+
+{% endblock %}

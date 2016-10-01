@@ -1,0 +1,52 @@
+{% block content %}
+
+    <div id="plot_nterm"></div>
+
+<script>
+
+var myseries_n = [];
+
+{% set i = 1 %}
+{% for arr in result.result_nterm.transpose().tolist() %}
+myseries_n.push({{ {'name': (i|string)+'+', 'data': arr} | tojson }});
+    {% set i = i+1  %}
+{% endfor %}
+
+$(function () {
+    $('#plot_nterm').highcharts({
+        chart: {
+            type: 'column'
+        },
+        credits: {
+                    enabled: false
+                },
+        title: {
+            text: 'Charge State Plot (N-terminal ions)'
+        },
+        xAxis: {
+            categories: {{ range(1, result.result_nterm.tolist()|length) | list }},
+            title: {
+                text: 'Ion Index'
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Relative Abundance'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            }
+        },
+        series: myseries_n
+    });
+});
+</script>
+
+{% endblock %}

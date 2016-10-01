@@ -1,0 +1,86 @@
+
+{% block content %}
+
+    <div style="padding-bottom: 60px" id="result"></div>
+
+    <ul class="nav nav-tabs" id="charge-nav">
+        <li><a data-toggle="tab" href="#home" id="hometoggle">N-terminal</a></li>
+        <li><a data-toggle="tab" href="#menu1" id="tab1toggle">C-terminal</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+        {% include "chargestate/charge_nterm_plot.html" %}
+
+        </div>
+        <div id="menu1" class="tab-pane fade">
+
+        {% include "chargestate/charge_cterm_plot.html" %}
+
+        </div>
+
+
+    </div>
+
+    <div id="table-content"></div>
+
+
+    <script>
+
+            $(document).ready(function(){
+                $('#hometoggle').tab('show');
+                location="#result"
+
+            });
+
+            $('#hometoggle').on('show.bs.tab', function(e) {
+                var all_data = {{ result.result_nterm.tolist() | tojson }};
+
+
+                var all_container = document.getElementById('table-content');
+
+                all_hot = new Handsontable(all_container, {
+                    data: all_data,
+                    rowHeaders: true,
+                    colHeaders: true,
+                    stretchH: 'all',
+                    height: 600,
+                    manualColumnResize: true
+                });
+            });
+
+            $('#hometoggle').on('hide.bs.tab', function(e){
+                all_hot.destroy()
+            });
+
+            $('#tab1toggle').on('show.bs.tab', function(e) {
+
+                var apo_data = {{ result.result_cterm.tolist() | tojson }};
+
+                var apo_container = document.getElementById('table-content');
+
+                apo_hot = new Handsontable(apo_container, {
+                    data: apo_data,
+                    rowHeaders: true,
+                    colHeaders: true,
+                    stretchH: 'all',
+                    height: 600,
+                    manualColumnResize: true
+                });
+
+                apo_hot.render()
+
+
+            });
+
+
+
+
+
+    </script>
+
+
+
+
+{% endblock %}
